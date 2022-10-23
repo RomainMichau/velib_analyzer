@@ -1,0 +1,148 @@
+[
+  {
+    "station": {
+      "gps": {
+        "latitude": 48.857058739111096,
+        "longitude": 2.341798283943937
+      },
+      "state": "Operative",
+      "name": "Quai de l'Horloge - Pont Neuf",
+      "code": "1001",
+      "type": "yes",
+      "dueDate": 1629576000
+    },
+    "nbBike": 12,
+    "nbEbike": 0,
+    "nbFreeDock": 0,
+    "nbFreeEDock": 4,
+    "creditCard": "yes",
+    "nbDock": 0,
+    "nbEDock": 17,
+    "nbBikeOverflow": 0,
+    "nbEBikeOverflow": 0,
+    "kioskState": "yes",
+    "overflow": "no",
+    "overflowActivation": "no",
+    "maxBikeOverflow": 0,
+    "densityLevel": 1,
+    "bikes": [
+      {
+        "dockPosition": "9",
+        "bikeName": "19493",
+        "bikeElectric": "no",
+        "bikeStatus": "disponible",
+        "bikeRate": 2,
+        "numberOfRates": 8,
+        "lastRateDate": "2022-10-23T09:15:41Z"
+      },
+      {
+        "dockPosition": "10",
+        "bikeName": "52044",
+        "bikeElectric": "no",
+        "bikeStatus": "disponible",
+        "bikeRate": 3,
+        "numberOfRates": 6,
+        "lastRateDate": "2022-10-24T06:14:23Z"
+      },
+      {
+        "dockPosition": "16",
+        "bikeName": "12507",
+        "bikeElectric": "no",
+        "bikeStatus": "disponible",
+        "bikeRate": 3,
+        "numberOfRates": 10,
+        "lastRateDate": "2022-10-23T16:19:03Z"
+      },
+      {
+        "dockPosition": "15",
+        "bikeName": "44313",
+        "bikeElectric": "no",
+        "bikeStatus": "disponible",
+        "bikeRate": 3,
+        "numberOfRates": 14,
+        "lastRateDate": "2022-10-24T15:28:05Z"
+      },
+      {
+        "dockPosition": "11",
+        "bikeName": "08047",
+        "bikeElectric": "no",
+        "bikeStatus": "disponible",
+        "bikeRate": 2,
+        "numberOfRates": 2,
+        "lastRateDate": "2022-10-24T15:40:12Z"
+      },
+      {
+        "dockPosition": "14",
+        "bikeName": "42846",
+        "bikeElectric": "no",
+        "bikeStatus": "disponible",
+        "bikeRate": 3,
+        "numberOfRates": 5,
+        "lastRateDate": "2022-10-23T16:31:24Z"
+      },
+      {
+        "dockPosition": "4",
+        "bikeName": "02731",
+        "bikeElectric": "no",
+        "bikeStatus": "disponible",
+        "bikeRate": 3,
+        "numberOfRates": 5,
+        "lastRateDate": "2022-10-21T12:29:39Z"
+      },
+      {
+        "dockPosition": "8",
+        "bikeName": "52501",
+        "bikeElectric": "no",
+        "bikeStatus": "disponible",
+        "bikeRate": 3,
+        "numberOfRates": 3,
+        "lastRateDate": "2022-10-23T06:09:51Z"
+      },
+      {
+        "dockPosition": "12",
+        "bikeName": "51801",
+        "bikeElectric": "no",
+        "bikeStatus": "disponible",
+        "bikeRate": 3,
+        "numberOfRates": 3,
+        "lastRateDate": "2022-10-24T06:42:46Z"
+      },
+      {
+        "dockPosition": "2",
+        "bikeName": "10964",
+        "bikeElectric": "no",
+        "bikeStatus": "disponible",
+        "bikeRate": 3,
+        "numberOfRates": 6,
+        "lastRateDate": "2022-10-23T19:03:54Z"
+      },
+      {
+        "dockPosition": "5",
+        "bikeName": "04721",
+        "bikeElectric": "no",
+        "bikeStatus": "disponible",
+        "bikeRate": 3,
+        "numberOfRates": 5,
+        "lastRateDate": "2022-10-23T13:40:43Z"
+      },
+      {
+        "dockPosition": "3",
+        "bikeName": "08252",
+        "bikeElectric": "no",
+        "bikeStatus": "disponible",
+        "bikeRate": 3,
+        "numberOfRates": 4,
+        "lastRateDate": "2022-10-23T09:49:38Z"
+      },
+      {
+        "dockPosition": "7",
+        "bikeName": "62333",
+        "bikeElectric": "yes",
+        "bikeStatus": "indisponible",
+        "bikeRate": 3,
+        "numberOfRates": 10,
+        "lastRateDate": "2022-10-21T06:30:38Z"
+      }
+    ]
+  }
+]

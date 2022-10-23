@@ -1,2 +1,5 @@
 cloudscraper
 requests
+psycopg2
+pytz
+python-dateutil
