@@ -7,7 +7,7 @@ import cloudscraper
 # class Station:
 
 class VelibApiService:
-    def __init__(self):
+    def __init__(self, token: str):
         self.__scraper = cloudscraper.create_scraper(
             browser={
                 'browser': 'chrome',
@@ -16,7 +16,7 @@ class VelibApiService:
             }
         )
         self.__headers = {
-            "Authorization": "Basic bW9iYTokMnkkMTAkRXNJYUk2LkRsZTh1elJGLlZGTEVKdTJ5MDJkc2xILnY3cUVvUkJHZ041MHNldUZpUkU1Ny4=",
+            "Authorization": f"Basic {token}",
             "accept-encoding": "gzip",
             "user-agent": "okhttp/3.12.12"
 
