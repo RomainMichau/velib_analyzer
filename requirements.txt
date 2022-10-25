@@ -1,5 +1,6 @@
 cloudscraper
 requests
-psycopg2
+psycopg
+psycopg_pool
 pytz
 python-dateutil

@@ -1,8 +1,9 @@
 from datetime import datetime
 from typing import Optional
-
-import psycopg2
-
+import asyncio
+import psycopg
+from psycopg import AsyncConnection
+from psycopg_pool import ConnectionPool, AsyncConnectionPool
 from entities import Velib, Station, VelibDocked
 
 SELECT_ALL_VELIB_CODE = """
@@ -63,12 +64,24 @@ VALUES(%s, %s, %s);
 class SqlService:
     def __init__(self, hostname: str, db_name: str, username: str, password: str, port: int = 4532):
         self.port = port
-        self.conn = psycopg2.connect(
-            host=hostname,
-            database=db_name,
-            user=username,
-            password=password,
-            port=port)
+        self.hostname = hostname
+        self.db_name = db_name
+        self.username = username
+        self.password = password
+        self.conn_pool = asyncio.Queue()
+
+        self.conn = psycopg.connect(
+            f"host={self.hostname} dbname={self.db_name} user={self.username} password={self.password} port={self.port}")
+        self.pool = asyncio.run(self.__init_pool(), debug=True)
+        print(self.pool)
+
+    async def __init_pool(self):
+        pool = AsyncConnectionPool(
+                f"hostaddr=94.23.43.148 dbname={self.db_name} user={self.username} password={self.password} port={self.port}"
+                , min_size=4, max_size=50,
+                timeout=100)
+        await pool.wait()
+        return pool
 
     def get_all_velibs_code(self):
         cur = self.conn.cursor()
@@ -106,6 +119,19 @@ class SqlService:
         cur.close()
         return res
 
+    async def get_station_by_code_async(self, code: str) -> Optional[Station]:
+        async with self.pool.connection() as conn:
+            async with conn.cursor() as cur:
+                await cur.execute(SELECT_STATION_BY_CODE, (code,))
+                sql_res = await cur.fetchall()
+                if sql_res is None or len(sql_res) == 0:
+                    return None
+                if len(sql_res) != 1:
+                    raise Exception(f"Several statiob with code {code}")
+                res = Station(sql_res[0][0], sql_res[0][1], sql_res[0][2], code)
+                await cur.close()
+                return res
+
     def get_last_velib_docked(self, velib_code: int) -> Optional[VelibDocked]:
         cur = self.conn.cursor()
         cur.execute(GET_LAST_DOCKED_STATION_FOR_VELIB, (velib_code,))
@@ -130,11 +156,27 @@ class SqlService:
         self.conn.commit()
         cur.close()
 
+    async def insert_station_async(self, station_name: str, long: float, lat: float, code: str):
+        async with self.pool.connection() as conn:
+            async with conn.cursor() as cur:
+                print("INserting stuff2")
+                await cur.execute(INSERT_STATION, (station_name, long, lat, code))
+                await conn.commit()
+                await cur.close()
+
     def insert_docked(self, velib_code: int, timestamp: datetime, station_code: str):
         cur = self.conn.cursor()
         cur.execute(INSERT_VELIB_DOCKED, (velib_code, timestamp, station_code))
         self.conn.commit()
         cur.close()
+
+    async def insert_docked_async(self, velib_code: int, timestamp: datetime, station_code: str):
+        async with self.pool.connection() as conn:
+            async with conn.cursor() as cur:
+                print("INserting stuff")
+                await cur.execute(INSERT_VELIB_DOCKED, (velib_code, timestamp, station_code))
+                await conn.commit()
+                await cur.close()
 
     def insert_rating(self, velib_code: int, rate: int, rate_time: datetime):
         cur = self.conn.cursor()
