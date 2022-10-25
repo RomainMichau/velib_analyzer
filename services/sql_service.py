@@ -25,8 +25,8 @@ FROM public.stations WHERE station_code = %s;
 """
 
 GET_LAST_DOCKED_STATION_FOR_VELIB = """
-SELECT station_code, max("timestamp")
-FROM public.velib_docked code where velib_code = %s group by station_code 
+SELECT "timestamp", station_code
+FROM public.velib_docked code where velib_code = %s order by "timestamp" desc limit 1
 """
 
 INSERT_VELIB = """
