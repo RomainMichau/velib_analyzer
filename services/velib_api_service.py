@@ -3,9 +3,7 @@ from typing import List
 
 import cloudscraper
 
-# @dataclasses
-# class Station:
-from entities import Velib, Station
+from entities.velib_api_entities import VelibApi, StationApi
 
 
 class VelibApiService:
@@ -25,7 +23,7 @@ class VelibApiService:
         }
         self.__base_url = "https://www.velib-metropole.fr/api"
 
-    def get_velib_at_station(self, station_name: str) -> List[Velib]:
+    def get_velib_at_station(self, station_name: str) -> List[VelibApi]:
         json = {
             'stationName': station_name,
             'disponibility': 'yes',
@@ -42,20 +40,25 @@ class VelibApiService:
         # Some station name are used twice (y tho)
         stations = response.json()
         for station in stations:
+            # The API will return all station having a name starting with `station_name` (y tho).
+            # I only want exact match
+            if station['station']['name'] != station_name:
+                continue
             for velib in station["bikes"]:
-                code = velib["bikeName"]
+                code = int(velib["bikeName"])
                 is_electric = velib["bikeElectric"] == "yes"
-                res.append(Velib(code, is_electric))
+                is_available = velib["bikeStatus"] == "disponible"
+                res.append(VelibApi(code, is_electric, is_available))
         return res
 
-    def get_all_station(self) -> List[Station]:
+    def get_all_station(self) -> List[StationApi]:
         data = {
             'disponibility': 'yes',
         }
         url = f" {self.__base_url}/map/details?zoomLevel=1&gpsTopLatitude=49.05546&gpsTopLongitude=2.662193&gpsBotLongitude=1.898879&gpsBotLatitude=48.572554&nbStations=0&bikes=yes"
         response = self.__scraper.get(
             url, headers=self.__headers, data=data)
-
+        names = set()
         if response.ok:
             logging.debug(f"Get all stations success, Responded with: {response.text}")
         else:
@@ -65,8 +68,14 @@ class VelibApiService:
         stations = response.json()
         for station in stations:
             name = station["station"]["name"]
-            code = station["station"]["code"]
+            # Some stations are duplicated in Velib API
+            if name in names:
+                continue
+            names.add(name)
+            if "_relais" in station["station"]["code"]:
+                continue
+            code = int(station["station"]["code"])
             longitude = station["station"]["gps"]["longitude"]
             latitude = station["station"]["gps"]["latitude"]
-            res.append(Station(name, longitude, latitude, code))
+            res.append(StationApi(name, longitude, latitude, code))
         return res

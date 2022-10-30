@@ -1,18 +1,27 @@
--- public.tricount definition
+-- public.run definition
 
 -- Drop table
 
--- DROP TABLE public.tricount;
+DROP TABLE public.velib_docked;
+DROP TABLE public.rating;
+DROP TABLE public.velibs;
+DROP TABLE public.stations;
 
+DROP TABLE public.run;
 
-CREATE TABLE public.velibs
+CREATE TABLE public.run
 (
-    id         int8 NOT NULL GENERATED ALWAYS AS IDENTITY,
-    velib_code int8 NOT NULL,
-    electric   boolean,
-    CONSTRAINT velib_pk PRIMARY KEY (id),
-    CONSTRAINT velib_code_un UNIQUE (velib_code)
+    id       int8        NOT NULL GENERATED ALWAYS AS IDENTITY,
+    run_time timestamptz NOT NULL,
+    CONSTRAINT run_pk PRIMARY KEY (id),
+    CONSTRAINT run_time_un UNIQUE (run_time)
 );
+
+
+-- public.stations definition
+
+-- Drop table
+
 
 CREATE TABLE public.stations
 (
@@ -20,24 +29,38 @@ CREATE TABLE public.stations
     station_name varchar NOT NULL,
     long         numeric NOT NULL,
     lat          numeric NOT NULL,
-    code         varchar    NOT NULL,
-
+    station_code int8    NOT NULL,
+    run          int8    NOT NULL,
+    CONSTRAINT code_un UNIQUE (station_code),
+    CONSTRAINT name_un UNIQUE (station_name),
     CONSTRAINT station_pk PRIMARY KEY (id),
-    CONSTRAINT code_un UNIQUE (code)
+    CONSTRAINT run_fk FOREIGN KEY (run) REFERENCES public.run (id)
+
 );
 
-CREATE TABLE public.velib_docked
+
+-- public.velibs definition
+
+-- Drop table
+
+
+CREATE TABLE public.velibs
 (
-    id         int8        NOT NULL GENERATED ALWAYS AS IDENTITY,
-    velib_code int8        NOT NULL,
-    rate_time  timestamptz NOT NULL,
-    station_id int8        NOT NULL,
-    CONSTRAINT velib_docked_pk PRIMARY KEY (id),
-    CONSTRAINT station_id_fk FOREIGN KEY (station_id) REFERENCES public.stations (id),
-    CONSTRAINT velib_code_fk FOREIGN KEY (velib_code) REFERENCES public.velibs (velib_code)
+    id         int8 NOT NULL GENERATED ALWAYS AS IDENTITY,
+    velib_code int8 NOT NULL,
+    electric   bool NOT NULL,
+    run        int8 NOT NULL,
+
+    CONSTRAINT velib_code_un UNIQUE (velib_code),
+    CONSTRAINT velib_pk PRIMARY KEY (id),
+    CONSTRAINT run_fk FOREIGN KEY (run) REFERENCES public.run (id)
 
 );
 
+
+-- public.rating definition
+
+-- Drop table
 
 
 CREATE TABLE public.rating
@@ -46,17 +69,29 @@ CREATE TABLE public.rating
     velib_code int8        NOT NULL,
     rate       int8        NOT NULL,
     rate_time  timestamptz NOT NULL,
-    station_id int8        NOT NULL,
+    run        int8        NOT NULL,
     CONSTRAINT rating_pk PRIMARY KEY (id),
+    CONSTRAINT velib_code UNIQUE (velib_code, rate_time),
     CONSTRAINT velib_code_fk FOREIGN KEY (velib_code) REFERENCES public.velibs (velib_code),
-    CONSTRAINT station_id_fk FOREIGN KEY (station_id) REFERENCES public.stations (id),
-    CONSTRAINT velib_code UNIQUE (velib_code, rate_time)
+    CONSTRAINT run_fk FOREIGN KEY (run) REFERENCES public.run (id)
 );
 
-CREATE TABLE public.run
+
+-- public.velib_docked definition
+
+-- Drop table
+
+
+CREATE TABLE public.velib_docked
 (
-    id       int8        NOT NULL GENERATED ALWAYS AS IDENTITY,
-    run_time timestamptz NOT NULL,
-    CONSTRAINT run_pk PRIMARY KEY (id),
-    CONSTRAINT run_time_un UNIQUE (run_time)
+    id           int8        NOT NULL GENERATED ALWAYS AS IDENTITY,
+    velib_code   int8        NOT NULL,
+    "timestamp"  timestamptz NOT NULL,
+    station_code int8        NOT NULL,
+    run          int8        NOT NULL,
+    available    bool        NOT NULL,
+    CONSTRAINT velib_docked_pk PRIMARY KEY (id),
+    CONSTRAINT velib_code_fk FOREIGN KEY (velib_code) REFERENCES public.velibs (velib_code),
+    CONSTRAINT velib_docked_fk FOREIGN KEY (station_code) REFERENCES public.stations (station_code),
+    CONSTRAINT run_fk FOREIGN KEY (run) REFERENCES public.run (id)
 );

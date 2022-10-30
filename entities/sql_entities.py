@@ -3,28 +3,29 @@ from datetime import datetime
 
 
 @dataclass
-class Velib:
+class VelibSql:
     code: int
     is_electric: bool
 
 
-@dataclass
-class Station:
+@dataclass(frozen=True)
+class StationSql:
     name: str
     longitude: float
     latitude: float
-    code: str
+    code: int
 
 
 @dataclass
-class Rating:
+class RatingSql:
     velib_code: int
     rate: int
     timestamp: datetime
 
 
 @dataclass
-class VelibDocked:
+class VelibDockedSql:
     velib_code: int
     station_code: int
     timestamp: datetime
+    available: bool

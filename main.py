@@ -11,6 +11,7 @@ def main():
     args = parse_args()
     sql = SqlService(args.db_hostname, args.db_name, args.db_user, args.db_password, args.db_port)
     velib_api = VelibApiService(args.token)
+   # velib_api.get_velib_at_station("Karl Marx")
     export = DB_export(sql, velib_api)
     export.run()
 
